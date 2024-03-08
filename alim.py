@@ -6,11 +6,8 @@ import matplotlib.pyplot as plt
 url = 'http://192.168.0.2/Home.cgi'
 i=0
 
-# Crée une figure et un sous-plot
+# Créer une figure et un graphique
 fig, ax = plt.subplots()
-
-# Crée une ligne vide
-line, = ax.plot([], [])
 
 while True:
     response = requests.get(url)
@@ -22,25 +19,28 @@ while True:
         input_element = soup.find('input', {'id':'actcur'})
 
         #Extrait la valeur de l'attribut "value"
-        value = float(input_element['value'].replace(' A', ''))
+        value = input_element['value']
 
-        # Met à jour la ligne avec les nouvelles données
-        line.set_data([i], [value])
+        # Ajouter la valeur au graphique
+        ax.plot(i, float(value.replace(' A', '')), 'bo')
 
-        # Met à jour les limites de l'axe des x
-        ax.set_xlim([i-50, i])
+        # Définir les limites de l'axe des x
+        ax.set_xlim(left=0, right=i+1)
 
-        # Met à jour les limites de l'axe des y
-        ax.set_ylim([min(value, value-0.1), max(value, value+0.1)])
+        # Définir les limites de l'axe des y
+        ax.set_ylim(bottom=0, top=max(float(value.replace(' A', '')), 1))
 
-        # Rafraîchit la fenêtre graphique
+        # Rafraîchir le graphique
         fig.canvas.draw()
         fig.canvas.flush_events()
 
         print(i,value)
         i+=1
     else:
-        print(f"Erreur {response.status_code} lors de la récupération de la page web de l'alimentation")
+        print(f"Erreur {response.status_code} lors de la récupération de la page wed de l'alimentation")
 
     # Attend une seconde avant la prochaine requête
     time.sleep(1)
+
+# Afficher la fenêtre matplotlib
+plt.show()
