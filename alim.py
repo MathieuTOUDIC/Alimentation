@@ -4,7 +4,10 @@ import time
 import matplotlib.pyplot as plt
 
 url = 'http://192.168.0.2/Home.cgi'
-i=0
+i = 0
+
+# Activer le mode interactif de Matplotlib
+plt.ion()
 
 # Créer une figure et un graphique
 fig, ax = plt.subplots()
@@ -34,13 +37,10 @@ while True:
         fig.canvas.draw()
         fig.canvas.flush_events()
 
-        print(i,value)
-        i+=1
+        print(i, value)
+        i += 1
     else:
-        print(f"Erreur {response.status_code} lors de la récupération de la page wed de l'alimentation")
+        print(f"Erreur {response.status_code} lors de la récupération de la page web de l'alimentation")
 
     # Attend une seconde avant la prochaine requête
     time.sleep(1)
-
-# Afficher la fenêtre matplotlib
-plt.show()
