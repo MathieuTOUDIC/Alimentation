@@ -5,6 +5,7 @@ import matplotlib.pyplot as plt
 
 url = 'http://192.168.0.2/Home.cgi'
 i = 0
+max_value = 0  # Ajouter une variable pour stocker la valeur maximale
 
 # Activer le mode interactif de Matplotlib
 plt.ion()
@@ -24,6 +25,9 @@ while True:
         #Extrait la valeur de l'attribut "value"
         value = input_element['value']
 
+        # Mettre à jour la valeur maximale si nécessaire
+        max_value = max(max_value, float(value.replace(' A', '')))
+
         # Ajouter la valeur au graphique
         ax.plot(i, float(value.replace(' A', '')), 'bo')
 
@@ -31,7 +35,10 @@ while True:
         ax.set_xlim(left=0, right=i+1)
 
         # Définir les limites de l'axe des y
-        ax.set_ylim(bottom=0, top=max(float(value.replace(' A', '')), 1))
+        ax.set_ylim(bottom=0, top=max_value+1)
+
+        # Afficher la valeur maximale sur le graphique
+        ax.text(0.05, 0.9, f'Max: {max_value:.2f} A', transform=ax.transAxes)
 
         # Rafraîchir le graphique
         fig.canvas.draw()
