@@ -1,3 +1,7 @@
+import requests
+from bs4 import BeautifulSoup
+import time
+import matplotlib.pyplot as plt
 import matplotlib.ticker as ticker
 
 url = 'http://192.168.0.2/Home.cgi'
@@ -10,6 +14,9 @@ plt.ion()
 # Créer une figure et un graphique
 fig, ax = plt.subplots()
 
+# Définir un intervalle fixe entre les graduations de l'axe des y
+ax.yaxis.set_major_locator(ticker.MultipleLocator(0.1))
+
 # Ajouter une annotation vide pour la valeur maximale
 max_annot = ax.text(0.05, 0.9, '', transform=ax.transAxes)
 
@@ -18,9 +25,9 @@ def format_x(x, pos):
     minutes = int(x / 60)
     seconds = int(x % 60)
     if seconds == 0:
-        return f'{minutes} minute{"" if minutes == 1 else "s"}'
+        return f'{minutes} m{""}'
     else:
-        return f'{minutes} minute{"" if minutes == 1 else "s"} {seconds} seconde{"" if seconds == 1 else "s"}'
+        return f'{minutes} m{""} {seconds} s{""}'
 
 formatter = ticker.FuncFormatter(format_x)
 ax.xaxis.set_major_formatter(formatter)
