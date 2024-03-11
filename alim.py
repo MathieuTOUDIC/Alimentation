@@ -1,8 +1,3 @@
-import requests
-from bs4 import BeautifulSoup
-import time
-import matplotlib.pyplot as plt
-
 url = 'http://192.168.0.2/Home.cgi'
 i = 0
 max_value = 0  # Ajouter une variable pour stocker la valeur maximale
@@ -12,6 +7,9 @@ plt.ion()
 
 # Créer une figure et un graphique
 fig, ax = plt.subplots()
+
+# Ajouter une annotation vide pour la valeur maximale
+max_annot = ax.text(0.05, 0.9, '', transform=ax.transAxes)
 
 while True:
     response = requests.get(url)
@@ -37,8 +35,8 @@ while True:
         # Définir les limites de l'axe des y
         ax.set_ylim(bottom=0, top=max_value+1)
 
-        # Afficher la valeur maximale sur le graphique
-        ax.text(0.05, 0.9, f'Max: {max_value:.2f} A', transform=ax.transAxes)
+        # Mettre à jour le texte de l'annotation de la valeur maximale
+        max_annot.set_text(f'Max: {max_value:.2f} A')
 
         # Rafraîchir le graphique
         fig.canvas.draw()
