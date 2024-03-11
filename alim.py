@@ -1,5 +1,7 @@
+import matplotlib.ticker as ticker
+
 url = 'http://192.168.0.2/Home.cgi'
-time_sec = 0  # Ajouter une variable pour stocker le temps en secondes
+i = 0
 max_value = 0  # Ajouter une variable pour stocker la valeur maximale
 
 # Activer le mode interactif de Matplotlib
@@ -10,6 +12,15 @@ fig, ax = plt.subplots()
 
 # Ajouter une annotation vide pour la valeur maximale
 max_annot = ax.text(0.05, 0.9, '', transform=ax.transAxes)
+
+# Définir un format personnalisé pour les étiquettes des graduations de l'axe des y
+def format_y(x, pos):
+    minutes = int(x / 60)
+    seconds = int(x % 60)
+    return f'{minutes} minute{"" if minutes == 1 else "s"} {seconds} seconde{"" if seconds == 1 else "s"}'
+
+formatter = ticker.FuncFormatter(format_y)
+ax.yaxis.set_major_formatter(formatter)
 
 while True:
     response = requests.get(url)
@@ -27,10 +38,10 @@ while True:
         max_value = max(max_value, float(value.replace(' A', '')))
 
         # Ajouter la valeur au graphique
-        ax.plot(time_sec / 60, float(value.replace(' A', '')), 'bo')  # Convertir le temps en minutes
+        ax.plot(i, float(value.replace(' A', '')), 'bo')
 
         # Définir les limites de l'axe des x
-        ax.set_xlim(left=0, right=(time_sec+1) / 60)  # Convertir le temps en minutes
+        ax.set_xlim(left=0, right=i+1)
 
         # Définir les limites de l'axe des y
         ax.set_ylim(bottom=0, top=max_value+1)
@@ -42,8 +53,8 @@ while True:
         fig.canvas.draw()
         fig.canvas.flush_events()
 
-        print(time_sec / 60, value)  # Convertir le temps en minutes
-        time_sec += 1  # Incrémenter le temps de 1 seconde
+        print(i, value)
+        i += 1
     else:
         print(f"Erreur {response.status_code} lors de la récupération de la page web de l'alimentation")
 
