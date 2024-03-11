@@ -1,5 +1,5 @@
 url = 'http://192.168.0.2/Home.cgi'
-i = 0
+time_sec = 0  # Ajouter une variable pour stocker le temps en secondes
 max_value = 0  # Ajouter une variable pour stocker la valeur maximale
 
 # Activer le mode interactif de Matplotlib
@@ -27,10 +27,10 @@ while True:
         max_value = max(max_value, float(value.replace(' A', '')))
 
         # Ajouter la valeur au graphique
-        ax.plot(i, float(value.replace(' A', '')), 'bo')
+        ax.plot(time_sec / 60, float(value.replace(' A', '')), 'bo')  # Convertir le temps en minutes
 
         # Définir les limites de l'axe des x
-        ax.set_xlim(left=0, right=i+1)
+        ax.set_xlim(left=0, right=(time_sec+1) / 60)  # Convertir le temps en minutes
 
         # Définir les limites de l'axe des y
         ax.set_ylim(bottom=0, top=max_value+1)
@@ -42,8 +42,8 @@ while True:
         fig.canvas.draw()
         fig.canvas.flush_events()
 
-        print(i, value)
-        i += 1
+        print(time_sec / 60, value)  # Convertir le temps en minutes
+        time_sec += 1  # Incrémenter le temps de 1 seconde
     else:
         print(f"Erreur {response.status_code} lors de la récupération de la page web de l'alimentation")
 
