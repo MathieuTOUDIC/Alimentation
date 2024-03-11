@@ -13,14 +13,17 @@ fig, ax = plt.subplots()
 # Ajouter une annotation vide pour la valeur maximale
 max_annot = ax.text(0.05, 0.9, '', transform=ax.transAxes)
 
-# Définir un format personnalisé pour les étiquettes des graduations de l'axe des y
-def format_y(x, pos):
+# Définir un format personnalisé pour les étiquettes des graduations de l'axe des x
+def format_x(x, pos):
     minutes = int(x / 60)
     seconds = int(x % 60)
-    return f'{minutes} minute{"" if minutes == 1 else "s"} {seconds} seconde{"" if seconds == 1 else "s"}'
+    if seconds == 0:
+        return f'{minutes} minute{"" if minutes == 1 else "s"}'
+    else:
+        return f'{minutes} minute{"" if minutes == 1 else "s"} {seconds} seconde{"" if seconds == 1 else "s"}'
 
-formatter = ticker.FuncFormatter(format_y)
-ax.yaxis.set_major_formatter(formatter)
+formatter = ticker.FuncFormatter(format_x)
+ax.xaxis.set_major_formatter(formatter)
 
 while True:
     response = requests.get(url)
