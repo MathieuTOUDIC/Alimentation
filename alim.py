@@ -54,7 +54,7 @@ while True:
         ax.set_xlim(left=0, right=i+1)
 
         # Définir les limites de l'axe des y
-        ax.set_ylim(bottom=0, top=max_value+1)
+        ax.set_ylim(bottom=0, top=max_value)
 
         # Mettre à jour le texte de l'annotation de la valeur maximale
         max_annot.set_text(f'Max: {max_value:.2f} A')
