@@ -14,12 +14,6 @@ plt.ion()
 # Créer une figure et un graphique
 fig, ax = plt.subplots()
 
-# Définir un intervalle fixe entre les graduations de l'axe des y
-ax.yaxis.set_major_locator(ticker.MultipleLocator(0.1))
-
-# Utiliser le formateur automatique pour les étiquettes des graduations de l'axe des y
-ax.yaxis.set_major_formatter(ticker.AutoFormatter())
-
 # Ajouter une annotation vide pour la valeur maximale
 max_annot = ax.text(0.05, 0.9, '', transform=ax.transAxes)
 
