@@ -17,12 +17,8 @@ fig, ax = plt.subplots()
 # Définir un intervalle fixe entre les graduations de l'axe des y
 ax.yaxis.set_major_locator(ticker.MultipleLocator(0.1))
 
-# Définir un format personnalisé pour les étiquettes des graduations de l'axe des y
-def format_y(y, pos):
-    return f'{y:.1f} A'
-
-formatter = ticker.FuncFormatter(format_y)
-ax.yaxis.set_major_formatter(formatter)
+# Utiliser le formateur automatique pour les étiquettes des graduations de l'axe des y
+ax.yaxis.set_major_formatter(ticker.AutoFormatter())
 
 # Ajouter une annotation vide pour la valeur maximale
 max_annot = ax.text(0.05, 0.9, '', transform=ax.transAxes)
