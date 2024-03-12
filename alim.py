@@ -110,3 +110,4 @@ while True:
         print(f"Erreur {response.status_code} lors de la récupération de la page web de l'alimentation")
 
     # Attend une seconde avant la prochaine requête
+    time.sleep(1)
