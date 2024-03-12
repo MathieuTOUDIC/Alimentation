@@ -1,19 +1,22 @@
-import matplotlib.pyplot as plt
+import tkinter as tk
 
-# Créer des données pour le graphique
-x = [1, 2, 3, 4, 5]
-y = [2, 3, 5, 7, 11]
+# Créer une fenêtre principale
+window = tk.Tk()
 
-# Créer une figure et un graphique
-fig, ax = plt.subplots()
+# Définir le titre de la fenêtre
+window.title("Ma fenêtre Tkinter")
 
-# Ajouter les données au graphique
-ax.plot(x, y)
+# Créer un bouton
+button = tk.Button(window, text="Cliquez-moi !", command=lambda: print("Bonjour !"))
 
-# Définir les titres des axes
-ax.set_xlabel('Titre de l\'axe des x')
-ax.set_ylabel('Titre de l\'axe des y')
-ax.set_title('Titre du graphique')
+# Ajouter le bouton à la fenêtre
+button.pack()
 
-# Afficher le graphique
-plt.show()
+# Créer un message
+label = tk.Label(window, text="Salut, bienvenue dans ma fenêtre Tkinter !")
+
+# Ajouter le message à la fenêtre
+label.pack()
+
+# Démarrer la boucle principale de Tkinter
+window.mainloop()
