@@ -1,113 +1,68 @@
+import tkinter as tk
 import requests
 from bs4 import BeautifulSoup
 import time
 import matplotlib.pyplot as plt
 import matplotlib.ticker as ticker
-import tkinter as tk
 
 url = 'http://192.168.0.2/Home.cgi'
 i = 0
-max_value = 0  # Ajouter une variable pour stocker la valeur maximale
+max_value = 0
 
-# Activer le mode interactif de Matplotlib
-plt.ion()
+root = tk.Tk()
+root.title("Graph")
 
-# Créer une figure et un graphique
+# Create a Matplotlib figure and axis
 fig, ax = plt.subplots()
 
-# Ajouter une annotation vide pour la valeur maximale
-max_annot = ax.text(0.05, 0.9, '', transform=ax.transAxes)
+# Create a Tkinter canvas for the figure
+canvas = FigureCanvasTkAgg(fig, master=root)
+canvas.get_tk_widget().pack(side=tk.TOP, fill=tk.BOTH, expand=True)
 
-# Définir un format personnalisé pour les étiquettes des graduations de l'axe des x
+# Create a button to reset the graph and the maximum value
+reset_button = tk.Button(root, text="Reset", command=lambda: reset_graph(ax, max_value))
+reset_button.pack(side=tk.BOTTOM)
+
+def reset_graph(ax, max_value):
+    global i
+    ax.clear()
+    ax.set_xlim(0, 1)
+    ax.set_ylim(0, 0)
+    max_value = 0
+    i = 0
+
+# Set the x-axis tick labels to display time in minutes and seconds
 def format_x(x, pos):
     minutes = int(x / 60)
     seconds = int(x % 60)
     if seconds == 0:
-        return f'{minutes} m{""}'
+        return f'{minutes} m'
     else:
-        return f'{minutes} m{""} {seconds} s{""}'
+        return f'{minutes} m {seconds} s'
 
 formatter = ticker.FuncFormatter(format_x)
 ax.xaxis.set_major_formatter(formatter)
 
-# Créer une fenêtre Tkinter
-window = tk.Tk()
-window.title("Graphique")
-
-# Créer un bouton de réinitialisation
-reset_button = tk.Button(window, text="Réinitialiser", command=lambda: reset_graph(ax, max_annot))
-reset_button.pack()
-
-# Créer un canevas Tkinter pour afficher le graphique
-canvas = plt.gcf().canvas
-canvas.pack()
-
-def reset_graph(ax, max_annot):
-    global i, max_value
-
-    # Réinitialiser la valeur maximale
-    max_value = 0
-
-    # Réinitialiser le graphique
-    ax.clear()
-
-    # Réinitialiser l'annotation de la valeur maximale
-    max_annot.set_text('')
-
-    # Réinitialiser les limites de l'axe des x
-    ax.set_xlim(left=0, right=i+1)
-
-    # Réinitialiser les limites de l'axe des y
-    ax.set_ylim(bottom=0, top=max_value)
-
-    # Réinitialiser les graduations de l'axe des y
-    ax.yaxis.set_minor_locator(ticker.MultipleLocator(0.01))
-
-    # Rafraîchir le graphique
-    fig.canvas.draw()
-    fig.canvas.flush_events()
-
-    # Réinitialiser le compteur d'itérations
-    i = 0
+# Turn on the interactive mode of Matplotlib
+plt.ion()
 
 while True:
     response = requests.get(url)
     if response.status_code == 200:
-        #Extrait la valeur à partir du contenu de la page web
         soup = BeautifulSoup(response.text, 'html.parser')
-
-        #Trouver l'input avec l'attribut id "actcur"
         input_element = soup.find('input', {'id':'actcur'})
-
-        #Extrait la valeur de l'attribut "value"
         value = input_element['value']
-
-        # Mettre à jour la valeur maximale si nécessaire
         max_value = max(max_value, float(value.replace(' A', '')))
-
-        # Ajouter la valeur au graphique
         ax.plot(i, float(value.replace(' A', '')), 'bo')
-
-        # Définir les limites de l'axe des x
         ax.set_xlim(left=0, right=i+1)
-
-        # Définir les limites de l'axe des y
         ax.set_ylim(bottom=0, top=max_value)
-
-        # Ajouter des graduations sur l'axe des y
         ax.yaxis.set_minor_locator(ticker.MultipleLocator(0.01))
-
-        # Mettre à jour le texte de l'annotation de la valeur maximale
-        max_annot.set_text(f'Max: {max_value:.2f} A')
-
-        # Rafraîchir le graphique
+        ax.text(0.05, 0.9, f'Max: {max_value:.2f} A', transform=ax.transAxes)
         fig.canvas.draw()
         fig.canvas.flush_events()
-
         print(i, value)
         i += 1
     else:
-        print(f"Erreur {response.status_code} lors de la récupération de la page web de l'alimentation")
+        print(f"Error {response.status_code} while retrieving the power supply web page")
 
-    # Attend une seconde avant la prochaine requête
     time.sleep(1)
