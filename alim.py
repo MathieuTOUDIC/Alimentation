@@ -38,6 +38,19 @@ window.title("Graphique")
 reset_button = tk.Button(window, text="Réinitialiser le graphique", command=lambda: reset_graph(ax, max_annot))
 reset_button.pack()
 
+# Créer une fenêtre
+window = tk.Tk()
+
+# Créer un bouton
+button = tk.Button(window, text="Réinitialiser", command=lambda: reset_graph(ax, max_annot))
+
+# Ajouter le bouton à la fenêtre
+button.pack()
+
+# Démarrer la boucle principale de l'interface graphique
+window.mainloop()
+
+
 # Fonction de rappel pour le bouton de réinitialisation
 def reset_graph(ax, max_annot):
     global i, max_value
