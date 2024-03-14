@@ -1,32 +1,54 @@
 import tkinter as tk
+from matplotlib.figure import Figure
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
+import numpy as np
 
-# Créer une fenêtre
-window = tk.Tk()
+class GraphicInterface:
+    def __init__(self, root):
+        self.root = root
+        self.root.title("Interface graphique")
 
-# Créer un bouton
-button = tk.Button(window, text="Réinitialiser", command=lambda: reset_graph())
+        # Créer un canvas pour le graphique
+        self.figure = Figure(figsize=(5, 4), dpi=100)
+        self.canvas = FigureCanvasTkAgg(self.figure, master=root)
+        self.canvas.draw()
+        self.canvas.get_tk_widget().pack(side=tk.TOP, fill=tk.BOTH, expand=True)
 
-# Ajouter le bouton à la fenêtre
-button.pack()
+        # Créer un emplacement pour afficher la valeur maximale
+        self.max_value_label = tk.Label(root, text="Valeur maximale : ")
+        self.max_value_label.pack(side=tk.TOP)
 
-# Démarrer la boucle principale de l'interface graphique
-window.mainloop()
+        # Créer un bouton de réinitialisation
+        self.reset_button = tk.Button(root, text="Réinitialiser", command=self.reset_graph)
+        self.reset_button.pack(side=tk.BOTTOM)
 
+        # Créer le graphique initial
+        self.create_graph()
 
+    def create_graph(self):
+        # Générer des données aléatoires
+        x = np.linspace(0, 10, 100)
+        y = np.sin(x) * np.random.rand() + np.random.rand()
 
-def reset_graph(ax, max_annot):
-    global i, max_value
-    # Réinitialiser le graphique
-    ax.clear()
-    # Réinitialiser les limites de l'axe des x
-    ax.set_xlim(left=0, right=1)
-    # Réinitialiser les limites de l'axe des y
-    ax.set_ylim(bottom=0, top=1)
-    # Réinitialiser la valeur maximale
-    max_value = 0
-    # Réinitialiser l'annotation de la valeur maximale
-    max_annot.set_text('')
-    # Réinitialiser le compteur d'itérations
-    i = 0
-    # Rafraîchir le graphique
-    fig.canvas.draw()
+        # Effacer les anciens graphiques
+        for ax in self.figure.get_axes():
+            self.figure.remove(ax)
+
+        # Créer un nouvel axe et tracer le graphique
+        ax = self.figure.add_subplot(111)
+        ax.plot(x, y)
+
+        # Calculer et afficher la valeur maximale
+        max_value = np.max(y)
+        self.max_value_label.config(text=f"Valeur maximale : {max_value:.2f}")
+
+        # Redessiner le canvas
+        self.canvas.draw()
+
+    def reset_graph(self):
+        self.create_graph()
+
+if __name__ == "__main__":
+    root = tk.Tk()
+    gui = GraphicInterface(root)
+    root.mainloop()
