@@ -20,12 +20,13 @@ max_annot = ax.text(0.05, 0.9, '', transform=ax.transAxes)
 
 # Définir un format personnalisé pour les étiquettes des graduations de l'axe des x
 def format_x(x, pos):
-    minutes = int(x / 60)
+    hours = int(x / 3600)
+    minutes = int((x % 3600) / 60)
     seconds = int(x % 60)
     if seconds == 0:
-        return f'{minutes} m{""}'
+        return f'{hours} h{""} {minutes} m{""}'
     else:
-        return f'{minutes} m{""} {seconds} s{""}'
+        return f'{hours} h{""} {minutes} m{""} {seconds} s{""}'
 
 formatter = ticker.FuncFormatter(format_x)
 ax.xaxis.set_major_formatter(formatter)
@@ -60,22 +61,4 @@ while True:
         ax.set_ylim(bottom=0, top=max_value)
 
         # Ajouter des graduations sur l'axe des y
-        ax.yaxis.set_minor_locator(ticker.MultipleLocator(0.01))
-
-        # Mettre à jour le texte de l'annotation de la valeur maximale
-        max_annot.set_text(f'Max: {max_value:.2f} A')
-
-        # Rafraîchir le graphique
-        fig.canvas.draw()
-        fig.canvas.flush_events()
-
-        print(i, value)
-        i += 1
-    else:
-        print(f"Erreur {response.status_code} lors de la récupération de la page web de l'alimentation")
-
-    # Attend une seconde avant la prochaine requête
-    time.sleep(1)
-
-# Boucle principale de Tkinter
-window.mainloop()
+        ax.yaxis.set_minor_locator(
