@@ -24,9 +24,15 @@ def format_x(x, pos):
     minutes = int((x % 3600) / 60)
     seconds = int(x % 60)
     if seconds == 0:
-        return f'{hours} h{""} {minutes} m{""}'
+            if hours == 0:
+                return {minutes} m{""}'
+            else:
+                return f'{hours} h{""} {minutes} m{""}'
     else:
-        return f'{hours} h{""} {minutes} m{""} {seconds} s{""}'
+            if hours == 0:
+                return f'{minutes} m{""} {seconds} s{""}'
+            else:
+                return f'{hours} h{""} {minutes} m{""} {seconds} s{""}'
 
 formatter = ticker.FuncFormatter(format_x)
 ax.xaxis.set_major_formatter(formatter)
