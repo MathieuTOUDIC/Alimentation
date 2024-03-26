@@ -23,16 +23,27 @@ def format_x(x, pos):
     hours = int(x / 3600)
     minutes = int((x % 3600) / 60)
     seconds = int(x % 60)
-    if seconds == 0:
-            if hours == 0:
-                return {minutes} m{""}'
+
+    if hours > 0:
+        if minutes > 0:
+            if seconds > 0:
+                return f'{hours}h {minutes}m {seconds}s'
             else:
-                return f'{hours} h{""} {minutes} m{""}'
+                return f'{hours}h {minutes}m'
+        else:
+            if seconds > 0:
+                return f'{hours}h {seconds}s'
+            else:
+                return f'{hours}h'
+    elif minutes > 0:
+        if seconds > 0:
+            return f'{minutes}m {seconds}s'
+        else:
+            return f'{minutes}m'
+    elif seconds > 0:
+        return f'{seconds}s'
     else:
-            if hours == 0:
-                return f'{minutes} m{""} {seconds} s{""}'
-            else:
-                return f'{hours} h{""} {minutes} m{""} {seconds} s{""}'
+        return ''
 
 formatter = ticker.FuncFormatter(format_x)
 ax.xaxis.set_major_formatter(formatter)
@@ -67,4 +78,22 @@ while True:
         ax.set_ylim(bottom=0, top=max_value)
 
         # Ajouter des graduations sur l'axe des y
-        ax.yaxis.set_minor_locator(
+        ax.yaxis.set_minor_locator(ticker.MultipleLocator(0.01))
+
+        # Mettre à jour le texte de l'annotation de la valeur maximale
+        max_annot.set_text(f'Max: {max_value:.2f} A')
+
+        # Rafraîchir le graphique
+        fig.canvas.draw()
+        fig.canvas.flush_events()
+
+        print(i, value)
+        i += 1
+    else:
+        print(f"Erreur {response.status_code} lors de la récupération de la page web de l'alimentation")
+
+    # Attend une seconde avant la prochaine requête
+    time.sleep(1)
+
+# Boucle principale de Tkinter
+window.mainloop()
