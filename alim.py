@@ -4,7 +4,6 @@ from bs4 import BeautifulSoup
 import time
 import matplotlib.pyplot as plt
 import matplotlib.ticker as ticker
-from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2Tk
 
 url = 'http://192.168.0.2/Home.cgi'
 i = 0
@@ -38,15 +37,6 @@ window.title("Graphique")
 # Créer un bouton de réinitialisation
 reset_button = tk.Button(window, text="Réinitialiser le graphique", command=lambda: reset_graph(ax, max_annot))
 reset_button.pack()
-
-# Créer une instance de FigureCanvasTkAgg pour afficher le graphique dans la fenêtre Tkinter
-canvas = FigureCanvasTkAgg(fig, window)
-canvas.draw()
-canvas.get_tk_widget().pack(side=tk.TOP, fill=tk.BOTH, expand=True)
-
-# Créer une instance de NavigationToolbar2Tk
-toolbar = NavigationToolbar2Tk(canvas, window)
-toolbar.pack(side=tk.BOTTOM, fill=tk.X)
 
 # Fonction de rappel pour le bouton de réinitialisation
 def reset_graph(ax, max_annot):
@@ -109,3 +99,6 @@ while True:
 
     # Attend une seconde avant la prochaine requête
     time.sleep(1)
+
+# Boucle principale de Tkinter
+window.mainloop()
