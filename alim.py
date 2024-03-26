@@ -57,6 +57,9 @@ window.title("Graphique")
 pause_button = tk.Button(window, text="Pause", command=lambda: toggle_pause(pause_button))
 pause_button.pack()
 
+# Mettre à jour l'interface graphique pour afficher le bouton
+window.update_idletasks()
+
 # Créer une fonction pour basculer entre l'état de pause et d'actualisation en continu
 def toggle_pause(button):
     global paused
