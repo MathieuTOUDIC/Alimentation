@@ -4,6 +4,7 @@ from bs4 import BeautifulSoup
 import time
 import matplotlib.pyplot as plt
 import matplotlib.ticker as ticker
+from matplotlib.widgets import SpanSelector
 
 url = 'http://192.168.0.2/Home.cgi'
 i = 0
@@ -37,6 +38,9 @@ window.title("Graphique")
 # Créer un bouton de réinitialisation
 reset_button = tk.Button(window, text="Réinitialiser le graphique", command=lambda: reset_graph(ax, max_annot))
 reset_button.pack()
+
+# Créer le widget SpanSelector pour le zoom
+span = SpanSelector(ax, onselect=lambda xmin, xmax: ax.set_xlim(xmin, xmax), rectprops=dict(facecolor='red', alpha=0.5))
 
 # Fonction de rappel pour le bouton de réinitialisation
 def reset_graph(ax, max_annot):
