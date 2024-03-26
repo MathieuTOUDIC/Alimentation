@@ -4,6 +4,7 @@ from bs4 import BeautifulSoup
 import time
 import matplotlib.pyplot as plt
 import matplotlib.ticker as ticker
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2Tk
 
 url = 'http://192.168.0.2/Home.cgi'
 i = 0
@@ -51,6 +52,16 @@ ax.xaxis.set_major_formatter(formatter)
 # Créer une fenêtre Tkinter
 window = tk.Tk()
 window.title("Graphique")
+
+# Créer un canvas pour afficher le graphique
+canvas = FigureCanvasTkAgg(fig, master=window)
+canvas.draw()
+canvas.get_tk_widget().pack(side=tk.TOP, fill=tk.BOTH, expand=True)
+
+# Créer une toolbar pour le zoom et le pan
+toolbar = NavigationToolbar2Tk(canvas, window)
+toolbar.update()
+canvas.get_tk_widget().pack(side=tk.TOP, fill=tk.BOTH, expand=True)
 
 # Boucle principale du graphique
 while True:
