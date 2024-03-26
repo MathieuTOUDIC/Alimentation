@@ -4,7 +4,6 @@ from bs4 import BeautifulSoup
 import time
 import matplotlib.pyplot as plt
 import matplotlib.ticker as ticker
-from matplotlib.widgets import SpanSelector
 
 url = 'http://192.168.0.2/Home.cgi'
 i = 0
@@ -34,32 +33,6 @@ ax.xaxis.set_major_formatter(formatter)
 # Créer une fenêtre Tkinter
 window = tk.Tk()
 window.title("Graphique")
-
-# Créer un bouton de réinitialisation
-reset_button = tk.Button(window, text="Réinitialiser le graphique", command=lambda: reset_graph(ax, max_annot))
-reset_button.pack()
-
-# Créer le widget SpanSelector pour le zoom
-span = SpanSelector(ax, onselect=lambda xmin, xmax: ax.set_xlim(xmin, xmax), rectprops=dict(facecolor='red', alpha=0.5))
-
-# Fonction de rappel pour le bouton de réinitialisation
-def reset_graph(ax, max_annot):
-    global i, max_value
-    # Réinitialiser le graphique
-    ax.clear()
-    # Réinitialiser les limites de l'axe des x
-    ax.set_xlim(left=0, right=i+1)
-    # Réinitialiser les limites de l'axe des y
-    ax.set_ylim(bottom=0, top=max_value)
-    # Réinitialiser la valeur maximale
-    max_value = 0
-    # Réinitialiser l'annotation de la valeur maximale
-    max_annot.set_text('')
-    # Réinitialiser la variable i
-    i = 0
-    # Rafraîchir le graphique
-    fig.canvas.draw()
-    fig.canvas.flush_events()
 
 # Boucle principale du graphique
 while True:
