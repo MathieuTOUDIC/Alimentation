@@ -26,7 +26,7 @@ max_annot = ax.text(0.05, 1.01, '', transform=ax.transAxes)
 
 # Définir un format personnalisé pour les étiquettes des graduations de l'axe des x
 def format_x(x, pos):
-    seconds = x * time_interval  # Convertir les millisecondes en secondes
+    seconds = int(x)  # Convertir les millisecondes en secondes
 
     minutes = int(seconds / 60)
     seconds = int(seconds % 60)
@@ -43,6 +43,9 @@ def format_x(x, pos):
 
 # Formater les étiquettes des graduations de l'axe des x
 ax.xaxis.set_major_formatter(ticker.FuncFormatter(format_x))
+
+# Définir les intervalles entre les graduations de l'axe des x
+ax.xaxis.set_major_locator(ticker.MultipleLocator(1))
 
 # Définir une fonction de rappel pour afficher le curseur lorsque la touche c est appuyée
 def on_key_press(event):
@@ -98,7 +101,7 @@ while True:
         fig.canvas.flush_events()
 
         print(i, value)
-        i += 1  # Incrémenter i de 1 pour afficher les secondes
+        i += time_interval  # Incrémenter i de l'intervalle de temps entre deux requêtes
     else:
         print(f"Erreur {response.status_code} lors de la récupération de la page web de l'alimentation")
 
