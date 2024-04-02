@@ -51,6 +51,20 @@ def format_x(x, pos):
 formatter = ticker.FuncFormatter(format_x)
 ax.xaxis.set_major_formatter(formatter)
 
+# Créer une ligne horizontale cachée
+cursor_line, = ax.axhline(y=0, color='red', linewidth=1, alpha=0)
+
+# Définir une fonction de rappel pour afficher le curseur lorsque la touche c est appuyée
+def on_key_press(event):
+    if event.key == 'c':
+        cursor_line.set_ydata([ax.get_ylim()[0], ax.get_ylim()[1]])
+        cursor_line.set_alpha(1)
+        cursor_line.set_xdata([i, i])
+        fig.canvas.draw()
+
+# Connecter la fonction de rappel à l'événement de pression de touche
+fig.canvas.mpl_connect('key_press_event', on_key_press)
+
 # Créer une fenêtre Tkinter
 window = tk.Tk()
 window.title("Graphique")
