@@ -16,6 +16,8 @@ plt.ion()
 # Créer une figure et un graphique
 fig, ax = plt.subplots()
 
+ax.text(3,6,'Appuyer sur c pour changer la couleur des points')
+
 # Ajouter une grille au graphique
 ax.grid(which='major', linestyle='--', linewidth=0.5, color='gray')
 
@@ -49,25 +51,11 @@ def format_x(x, pos):
     else:
         return ''
 
-formatter = ticker.FuncFormatter(format_x)
-ax.xaxis.set_major_formatter(formatter)
-
-# Créer une ligne horizontale cachée
-cursor_line, = ax.axhline(y=0, color='red', linewidth=1, alpha=0)
-
-# Créer une fenêtre Tkinter
-window = tk.Tk()
-window.title("Graphique")
-
 # Définir une fonction de rappel pour afficher le curseur lorsque la touche c est appuyée
 def on_key_press(event):
     global change_color  # Utiliser la variable globale change_color
     if event.key == 'c':
         change_color = not change_color  # Basculer la valeur de change_color
-        cursor_line.set_ydata([ax.get_ylim()[0], ax.get_ylim()[1]])
-        cursor_line.set_alpha(1)
-        cursor_line.set_xdata([i, i])
-        fig.canvas.draw()
 
 # Connecter la fonction de rappel à l'événement de pression de touche
 fig.canvas.mpl_connect('key_press_event', on_key_press)
@@ -120,10 +108,6 @@ while True:
 
     # Attend une seconde avant la prochaine requête
     time.sleep(1)
-
-    # Mettre à jour la position du curseur
-    cursor_line.set_xdata([i, i])
-    fig.canvas.draw()
 
 # Boucle principale de Tkinter
 window.mainloop()
