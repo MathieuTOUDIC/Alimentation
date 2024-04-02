@@ -8,13 +8,15 @@ import matplotlib.ticker as ticker
 url = 'http://192.168.0.2/Home.cgi'
 i = 0
 max_value = 0
-paused = False
 
 # Activer le mode interactif de Matplotlib
 plt.ion()
 
 # Créer une figure et un graphique
 fig, ax = plt.subplots()
+
+# Ajouter une grille au graphique
+ax.grid(which='major', linestyle='--', linewidth=0.5, color='gray')
 
 # Ajouter une annotation vide pour la valeur maximale
 max_annot = ax.text(0.05, 0.9, '', transform=ax.transAxes)
@@ -53,62 +55,45 @@ ax.xaxis.set_major_formatter(formatter)
 window = tk.Tk()
 window.title("Graphique")
 
-# Créer un bouton de pause
-pause_button = tk.Button(window, text="Pause", command=lambda: toggle_pause(pause_button))
-pause_button.pack()
-
-# Mettre à jour l'interface graphique pour afficher le bouton
-window.update_idletasks()
-
-# Créer une fonction pour basculer entre l'état de pause et d'actualisation en continu
-def toggle_pause(button):
-    global paused
-    paused = not paused
-    if paused:
-        button.config(text="Reprendre")
-    else:
-        button.config(text="Pause")
-
 # Boucle principale du graphique
 while True:
-    if not paused:
-        response = requests.get(url)
-        if response.status_code == 200:
-            #Extrait la valeur à partir du contenu de la page web
-            soup = BeautifulSoup(response.text, 'html.parser')
+    response = requests.get(url)
+    if response.status_code == 200:
+        #Extrait la valeur à partir du contenu de la page web
+        soup = BeautifulSoup(response.text, 'html.parser')
 
-            #Trouver l'input avec l'attribut id "actcur"
-            input_element = soup.find('input', {'id':'actcur'})
+        #Trouver l'input avec l'attribut id "actcur"
+        input_element = soup.find('input', {'id':'actcur'})
 
-            #Extrait la valeur de l'attribut "value"
-            value = input_element['value']
+        #Extrait la valeur de l'attribut "value"
+        value = input_element['value']
 
-            # Mettre à jour la valeur maximale si nécessaire
-            max_value = max(max_value, float(value.replace(' A', '')))
+        # Mettre à jour la valeur maximale si nécessaire
+        max_value = max(max_value, float(value.replace(' A', '')))
 
-            # Ajouter la valeur au graphique
-            ax.plot(i, float(value.replace(' A', '')), 'bo')
+        # Ajouter la valeur au graphique
+        ax.plot(i, float(value.replace(' A', '')), 'bo', ms=1)
 
-            # Définir les limites de l'axe des x
-            ax.set_xlim(left=0, right=i+1)
+        # Définir les limites de l'axe des x
+        ax.set_xlim(left=0, right=i+1)
 
-            # Définir les limites de l'axe des y
-            ax.set_ylim(bottom=0, top=max_value)
+        # Définir les limites de l'axe des y
+        ax.set_ylim(bottom=0, top=max_value)
 
-            # Ajouter des graduations sur l'axe des y
-            ax.yaxis.set_minor_locator(ticker.MultipleLocator(0.01))
+        # Ajouter des graduations sur l'axe des y
+        ax.yaxis.set_minor_locator(ticker.MultipleLocator(0.01))
 
-            # Mettre à jour le texte de l'annotation de la valeur maximale
-            max_annot.set_text(f'Max: {max_value:.2f} A')
+        # Mettre à jour le texte de l'annotation de la valeur maximale
+        max_annot.set_text(f'Max: {max_value:.2f} A')
 
-            # Rafraîchir le graphique
-            fig.canvas.draw()
-            fig.canvas.flush_events()
+        # Rafraîchir le graphique
+        fig.canvas.draw()
+        fig.canvas.flush_events()
 
-            print(i, value)
-            i += 1
-        else:
-            print(f"Erreur {response.status_code} lors de la récupération de la page web de l'alimentation")
+        print(i, value)
+        i += 1
+    else:
+        print(f"Erreur {response.status_code} lors de la récupération de la page web de l'alimentation")
 
     # Attend une seconde avant la prochaine requête
     time.sleep(1)
