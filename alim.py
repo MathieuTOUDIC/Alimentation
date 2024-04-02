@@ -26,22 +26,12 @@ max_annot = ax.text(0.05, 1.01, '', transform=ax.transAxes)
 
 # Définir un format personnalisé pour les étiquettes des graduations de l'axe des x
 def format_x(x, pos):
-    hours = int(x / 3600)
-    minutes = int((x % 3600) / 60)
-    seconds = int(x % 60)
+    seconds = x * time_interval  # Convertir les millisecondes en secondes
 
-    if hours > 0:
-        if minutes > 0:
-            if seconds > 0:
-                return f'{hours}h {minutes}m {seconds}s'
-            else:
-                return f'{hours}h {minutes}m'
-        else:
-            if seconds > 0:
-                return f'{hours}h {seconds}s'
-            else:
-                return f'{hours}h'
-    elif minutes > 0:
+    minutes = int(seconds / 60)
+    seconds = int(seconds % 60)
+
+    if minutes > 0:
         if seconds > 0:
             return f'{minutes}m {seconds}s'
         else:
@@ -51,6 +41,9 @@ def format_x(x, pos):
     else:
         return ''
 
+# Formater les étiquettes des graduations de l'axe des x
+ax.xaxis.set_major_formatter(ticker.FuncFormatter(format_x))
+
 # Définir une fonction de rappel pour afficher le curseur lorsque la touche c est appuyée
 def on_key_press(event):
     global change_color  # Utiliser la variable globale change_color
@@ -59,6 +52,9 @@ def on_key_press(event):
 
 # Connecter la fonction de rappel à l'événement de pression de touche
 fig.canvas.mpl_connect('key_press_event', on_key_press)
+
+# Définir l'intervalle de temps entre deux requêtes (en secondes)
+time_interval = 1
 
 # Boucle principale du graphique
 while True:
@@ -102,12 +98,12 @@ while True:
         fig.canvas.flush_events()
 
         print(i, value)
-        i += 1
+        i += 1  # Incrémenter i de 1 pour afficher les secondes
     else:
         print(f"Erreur {response.status_code} lors de la récupération de la page web de l'alimentation")
 
-    # Attend une seconde avant la prochaine requête
-    time.sleep(1)
+    # Attendre l'intervalle de temps entre deux requêtes
+    time.sleep(time_interval)
 
 # Boucle principale de Tkinter
 window.mainloop()
