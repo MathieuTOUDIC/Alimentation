@@ -8,6 +8,7 @@ import matplotlib.ticker as ticker
 url = 'http://192.168.0.2/Home.cgi'
 i = 0
 max_value = 0
+change_color = False  # Ajouter une variable booléenne pour changer la couleur des points
 
 # Activer le mode interactif de Matplotlib
 plt.ion()
@@ -60,7 +61,9 @@ window.title("Graphique")
 
 # Définir une fonction de rappel pour afficher le curseur lorsque la touche c est appuyée
 def on_key_press(event):
+    global change_color  # Utiliser la variable globale change_color
     if event.key == 'c':
+        change_color = not change_color  # Basculer la valeur de change_color
         cursor_line.set_ydata([ax.get_ylim()[0], ax.get_ylim()[1]])
         cursor_line.set_alpha(1)
         cursor_line.set_xdata([i, i])
@@ -85,8 +88,14 @@ while True:
         # Mettre à jour la valeur maximale si nécessaire
         max_value = max(max_value, float(value.replace(' A', '')))
 
+        # Choisir la couleur des points en fonction de la valeur de change_color
+        if change_color:
+            color = 'r'  # Rouge
+        else:
+            color = 'b'  # Bleu
+
         # Ajouter la valeur au graphique
-        ax.plot(i, float(value.replace(' A', '')), 'bo', ms=1)
+        ax.plot(i, float(value.replace(' A', '')), color=color, marker='o', markersize=1)
 
         # Définir les limites de l'axe des x
         ax.set_xlim(left=0, right=i+1)
