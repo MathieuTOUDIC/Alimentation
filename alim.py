@@ -26,7 +26,7 @@ max_annot = ax.text(0.05, 1.01, '', transform=ax.transAxes)
 
 # Définir un format personnalisé pour les étiquettes des graduations de l'axe des x
 def format_x(x, pos):
-    seconds = int(x)  # Convertir les millisecondes en secondes
+    seconds = int(x)  # Convertir les secondes en entier
 
     minutes = int(seconds / 60)
     seconds = int(seconds % 60)
@@ -59,8 +59,14 @@ fig.canvas.mpl_connect('key_press_event', on_key_press)
 # Définir l'intervalle de temps entre deux requêtes (en secondes)
 time_interval = 1
 
+# Mesurer le temps écoulé depuis le début du programme
+start_time = time.perf_counter()
+
 # Boucle principale du graphique
 while True:
+    # Mesurer le temps écoulé depuis la dernière requête
+    elapsed_time = time.perf_counter() - start_time
+
     response = requests.get(url)
     if response.status_code == 200:
         #Extrait la valeur à partir du contenu de la page web
@@ -82,10 +88,10 @@ while True:
             color = 'b'  # Bleu
 
         # Ajouter la valeur au graphique
-        ax.plot(i, float(value.replace(' A', '')), color=color, marker='o', markersize=1)
+        ax.plot(elapsed_time, float(value.replace(' A', '')), color=color, marker='o', markersize=1)
 
         # Définir les limites de l'axe des x
-        ax.set_xlim(left=0, right=i+1)
+        ax.set_xlim(left=0, right=elapsed_time+time_interval)
 
         # Définir les limites de l'axe des y
         ax.set_ylim(bottom=0, top=max_value)
@@ -100,8 +106,7 @@ while True:
         fig.canvas.draw()
         fig.canvas.flush_events()
 
-        print(i, value)
-        i += time_interval  # Incrémenter i de l'intervalle de temps entre deux requêtes
+        print(elapsed_time, value)
     else:
         print(f"Erreur {response.status_code} lors de la récupération de la page web de l'alimentation")
 
