@@ -16,13 +16,13 @@ plt.ion()
 # Créer une figure et un graphique
 fig, ax = plt.subplots()
 
-ax.text(3,6,'Appuyer sur c pour changer la couleur des points')
+fig.suptitle('Appuyer sur c pour changer la couleur des points', y=0.05)
 
 # Ajouter une grille au graphique
 ax.grid(which='major', linestyle='--', linewidth=0.5, color='gray')
 
 # Ajouter une annotation vide pour la valeur maximale
-max_annot = ax.text(0.05, 0.9, '', transform=ax.transAxes)
+max_annot = ax.text(0.05, 1.01, '', transform=ax.transAxes)
 
 # Définir un format personnalisé pour les étiquettes des graduations de l'axe des x
 def format_x(x, pos):
