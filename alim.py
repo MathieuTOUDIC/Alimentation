@@ -4,7 +4,6 @@ from bs4 import BeautifulSoup
 import time
 import matplotlib.pyplot as plt
 import matplotlib.ticker as ticker
-from matplotlib.widgets import Cursor
 
 url = 'http://192.168.0.2/Home.cgi'
 i = 0
@@ -51,19 +50,6 @@ def format_x(x, pos):
 
 formatter = ticker.FuncFormatter(format_x)
 ax.xaxis.set_major_formatter(formatter)
-
-# Créer un curseur caché
-cursor = Cursor(ax, horizOn=True, vertOn=True, useblit=True, color='red', linewidth=1)
-cursor.visible = False
-
-# Définir une fonction de rappel pour afficher le curseur lorsque la touche c est appuyée
-def on_key_press(event):
-    if event.key == 'c':
-        cursor.visible = not cursor.visible
-        fig.canvas.draw()
-
-# Connecter la fonction de rappel à l'événement de pression de touche
-fig.canvas.mpl_connect('key_press_event', on_key_press)
 
 # Créer une fenêtre Tkinter
 window = tk.Tk()
