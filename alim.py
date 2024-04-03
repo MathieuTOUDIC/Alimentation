@@ -106,14 +106,14 @@ while True:
         else:
             color = 'b'  # Bleu
 
-        # Ajouter la valeur au graphique
-        ax.plot(elapsed_time, power, color=color, linestyle='-')
+        # Ajouter la valeur au graphique (point)
+        ax.plot(elapsed_time, power, color=color, linestyle='-', marker='o', markersize=1)
 
         # Définir les limites de l'axe des x
         ax.set_xlim(left=0, right=elapsed_time+time_interval)
 
         # Définir les limites de l'axe des y
-        ax.set_ylim(bottom=0, top=max_value)
+        ax.set_ylim(bottom=-0.5, top=max_value+1)
 
         # Ajouter des graduations sur l'axe des y
         ax.yaxis.set_minor_locator(ticker.MultipleLocator(0.01))
