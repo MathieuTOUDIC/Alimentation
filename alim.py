@@ -54,8 +54,8 @@ def format_x(x, pos):
 # Formater les étiquettes des graduations de l'axe des x
 ax.xaxis.set_major_formatter(ticker.FuncFormatter(format_x))
 
-# Définir les intervalles entre les graduations de l'axe des x
-ax.xaxis.set_major_locator(ticker.MultipleLocator(1))
+# Définir un nombre maximal de graduations sur l'axe des x
+ax.xaxis.set_major_locator(ticker.MaxNLocator(10))
 
 # Définir une fonction de rappel pour afficher le curseur lorsque la touche c est appuyée
 def on_key_press(event):
