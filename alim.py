@@ -62,6 +62,14 @@ time_interval = 1
 # Mesurer le temps écoulé depuis le début du programme
 start_time = time.perf_counter()
 
+import collections
+
+# Définir la taille de la liste circulaire (nombre de valeurs à afficher sur l'axe des x)
+buffer_size = 60
+
+# Créer une liste circulaire pour stocker les valeurs de puissance
+power_buffer = collections.deque(maxlen=buffer_size)
+
 # Boucle principale du graphique
 while True:
     # Mesurer le temps écoulé depuis la dernière requête
@@ -80,7 +88,7 @@ while True:
 
         #Extrait la valeur du courant de l'attribut "value" et conversion en float
         current = float(current_element['value'].replace(' A', ''))
-        
+
         #Extrait la valeur de la tension de l'attribut "value" et conversion en float
         voltage = float(voltage_element['value'].replace(' V', ''))
 
@@ -90,18 +98,20 @@ while True:
         # Mettre à jour la valeur maximale si nécessaire
         max_value = max(max_value, power)
 
+        # Ajouter la valeur au buffer circulaire
+        power_buffer.append(power)
 
-        # Choisir la couleur des points en fonction de la valeur de change_color
-        if change_color:
-            color = 'r'  # Rouge
-        else:
-            color = 'b'  # Bleu
+        # Effacer le graphique
+        ax.clear()
 
-        # Ajouter la valeur au graphique
-        ax.plot(elapsed_time, power, color=color, marker='o', markersize=1)
+        # Ajouter une grille au graphique
+        ax.grid(which='major', linestyle='--', linewidth=0.5, color='gray')
+
+        # Ajouter les valeurs du buffer circulaire au graphique
+        ax.plot(range(len(power_buffer)), power_buffer, color=color, marker='o', markersize=1)
 
         # Définir les limites de l'axe des x
-        ax.set_xlim(left=0, right=elapsed_time+time_interval)
+        ax.set_xlim(left=0, right=len(power_buffer))
 
         # Définir les limites de l'axe des y
         ax.set_ylim(bottom=0, top=max_value)
@@ -122,6 +132,7 @@ while True:
 
     # Attendre l'intervalle de temps entre deux requêtes
     time.sleep(time_interval)
+
 
 # Boucle principale de Tkinter
 window.mainloop()
