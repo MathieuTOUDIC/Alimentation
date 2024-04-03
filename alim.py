@@ -26,12 +26,22 @@ max_annot = ax.text(0.05, 1.01, '', transform=ax.transAxes)
 
 # Définir un format personnalisé pour les étiquettes des graduations de l'axe des x
 def format_x(x, pos):
-    seconds = int(x)  # Convertir les secondes en entier
+    hours = int(x / 3600)
+    minutes = int((x % 3600) / 60)
+    seconds = int(x % 60)
 
-    minutes = int(seconds / 60)
-    seconds = int(seconds % 60)
-
-    if minutes > 0:
+    if hours > 0:
+        if minutes > 0:
+            if seconds > 0:
+                return f'{hours}h {minutes}m {seconds}s'
+            else:
+                return f'{hours}h {minutes}m'
+        else:
+            if seconds > 0:
+                return f'{hours}h {seconds}s'
+            else:
+                return f'{hours}h'
+    elif minutes > 0:
         if seconds > 0:
             return f'{minutes}m {seconds}s'
         else:
@@ -45,7 +55,7 @@ def format_x(x, pos):
 ax.xaxis.set_major_formatter(ticker.FuncFormatter(format_x))
 
 # Définir les intervalles entre les graduations de l'axe des x
-ax.xaxis.set_major_locator(ticker.MultipleLocator(10))
+ax.xaxis.set_major_locator(ticker.MultipleLocator(1))
 
 # Définir une fonction de rappel pour afficher le curseur lorsque la touche c est appuyée
 def on_key_press(event):
