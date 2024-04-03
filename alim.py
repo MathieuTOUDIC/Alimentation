@@ -54,8 +54,12 @@ def format_x(x, pos):
 # Formater les étiquettes des graduations de l'axe des x
 ax.xaxis.set_major_formatter(ticker.FuncFormatter(format_x))
 
+# Définir la limite maximale de graduations
+ticker.Locator.MAXTICKS = 2000
 # Définir un nombre maximal de graduations sur l'axe des x
 ax.xaxis.set_major_locator(ticker.MaxNLocator(10))
+
+
 
 # Définir une fonction de rappel pour afficher le curseur lorsque la touche c est appuyée
 def on_key_press(event):
@@ -116,7 +120,7 @@ while True:
         ax.set_ylim(bottom=-0.5, top=max_value+1)
 
         # Ajouter des graduations sur l'axe des y
-        ax.yaxis.set_minor_locator(ticker.MultipleLocator(0.01))
+        #ax.yaxis.set_minor_locator(ticker.MultipleLocator(0.01))
 
         # Mettre à jour le texte de l'annotation de la valeur maximale
         max_annot.set_text(f'Max: {max_value:.2f} W')
