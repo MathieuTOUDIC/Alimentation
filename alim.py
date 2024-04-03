@@ -98,7 +98,7 @@ while True:
             color = 'b'  # Bleu
 
         # Ajouter la valeur au graphique
-        ax.plot(elapsed_time, float(power.replace(' A', '')), color=color, marker='o', markersize=1)
+        ax.plot(elapsed_time, power, color=color, marker='o', markersize=1)
 
         # Définir les limites de l'axe des x
         ax.set_xlim(left=0, right=elapsed_time+time_interval)
