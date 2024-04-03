@@ -90,7 +90,7 @@ while True:
 
         #Extrait la valeur du courant de l'attribut "value" et conversion en float
         current = float(current_element['value'].replace(' A', ''))
-        
+
         #Extrait la valeur de la tension de l'attribut "value" et conversion en float
         voltage = float(voltage_element['value'].replace(' V', ''))
 
@@ -99,7 +99,6 @@ while True:
 
         # Mettre à jour la valeur maximale si nécessaire
         max_value = max(max_value, power)
-
 
         # Choisir la couleur des points en fonction de la valeur de change_color
         if change_color:
