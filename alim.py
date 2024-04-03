@@ -73,13 +73,22 @@ while True:
         soup = BeautifulSoup(response.text, 'html.parser')
 
         #Trouver l'input avec l'attribut id "actcur"
-        input_element = soup.find('input', {'id':'actcur'})
+        current_element = soup.find('input', {'id':'actcur'})
 
-        #Extrait la valeur de l'attribut "value"
-        value = input_element['value']
+        #Trouver l'input avec l'attribut id "actvol"
+        voltage_element = soup.find('input', {'id':'actvol'})
+
+        #Extrait la valeur du courant de l'attribut "value"
+        current = current_element['value']
+
+        #Extrait la valeur de la tension de l'attribut "value"
+        voltage = voltage_element['value']
+
+        #Multiplication du courant par la tension pour avoir la puissance
+        power = current*voltage
 
         # Mettre à jour la valeur maximale si nécessaire
-        max_value = max(max_value, float(value.replace(' A', '')))
+        max_value = max(max_value, float(power.replace(' A', '')))
 
         # Choisir la couleur des points en fonction de la valeur de change_color
         if change_color:
@@ -88,7 +97,7 @@ while True:
             color = 'b'  # Bleu
 
         # Ajouter la valeur au graphique
-        ax.plot(elapsed_time, float(value.replace(' A', '')), color=color, marker='o', markersize=1)
+        ax.plot(elapsed_time, float(power.replace(' A', '')), color=color, marker='o', markersize=1)
 
         # Définir les limites de l'axe des x
         ax.set_xlim(left=0, right=elapsed_time+time_interval)
@@ -106,7 +115,7 @@ while True:
         fig.canvas.draw()
         fig.canvas.flush_events()
 
-        print(elapsed_time, value)
+        print(elapsed_time, power)
     else:
         print(f"Erreur {response.status_code} lors de la récupération de la page web de l'alimentation")
 
