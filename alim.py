@@ -78,17 +78,18 @@ while True:
         #Trouver l'input avec l'attribut id "actvol"
         voltage_element = soup.find('input', {'id':'actvol'})
 
-        #Extrait la valeur du courant de l'attribut "value"
-        current = current_element['value']
-
-        #Extrait la valeur de la tension de l'attribut "value"
-        voltage = voltage_element['value']
+        #Extrait la valeur du courant de l'attribut "value" et conversion en float
+        current = float(current_element['value'].replace(' A', ''))
+        
+        #Extrait la valeur de la tension de l'attribut "value" et conversion en float
+        voltage = float(voltage_element['value'].replace(' V', ''))
 
         #Multiplication du courant par la tension pour avoir la puissance
         power = current*voltage
 
         # Mettre à jour la valeur maximale si nécessaire
-        max_value = max(max_value, float(power.replace(' A', '')))
+        max_value = max(max_value, power)
+
 
         # Choisir la couleur des points en fonction de la valeur de change_color
         if change_color:
@@ -109,7 +110,7 @@ while True:
         ax.yaxis.set_minor_locator(ticker.MultipleLocator(0.01))
 
         # Mettre à jour le texte de l'annotation de la valeur maximale
-        max_annot.set_text(f'Max: {max_value:.2f} A')
+        max_annot.set_text(f'Max: {max_value:.2f} W')
 
         # Rafraîchir le graphique
         fig.canvas.draw()
