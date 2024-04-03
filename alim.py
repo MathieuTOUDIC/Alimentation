@@ -4,6 +4,7 @@ from bs4 import BeautifulSoup
 import time
 import matplotlib.pyplot as plt
 import matplotlib.ticker as ticker
+import collections
 
 url = 'http://192.168.0.2/Home.cgi'
 i = 0
@@ -61,8 +62,6 @@ time_interval = 1
 
 # Mesurer le temps écoulé depuis le début du programme
 start_time = time.perf_counter()
-
-import collections
 
 # Définir la taille de la liste circulaire (nombre de valeurs à afficher sur l'axe des x)
 buffer_size = 60
